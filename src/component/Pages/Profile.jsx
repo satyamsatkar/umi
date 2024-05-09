@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import InnerHeader from '../Layout/InnerHeader'
 import { Avatar, TextField } from '@mui/material'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Profile() {
 
-    
+    const Navigate = useNavigate();
     const [value , setValue] = useState({
         fullname : "" || localStorage.getItem("Name"),
         number : "" || localStorage.getItem("food_mobile"),
@@ -56,7 +56,7 @@ function Profile() {
               <div >
                   Change Password
               </div>
-              <button className='history-btn'><i class="bi bi-bag-check"></i> ORDER HISTORY</button>
+              <button onClick={()=>{Navigate('/orderhistory')}} className='history-btn'><i class="bi bi-bag-check"></i> ORDER HISTORY</button>
           </div>
      
     

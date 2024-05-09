@@ -23,6 +23,7 @@ import Splash from './Pages/Splash';
 import SearchPage from './Pages/SearchPage';
 import VendorPage from './Pages/VendorPage';
 import Profile from './Pages/Profile'
+import Orderhistory from './Pages/Orderhistory';
 
 const Dash = lazy(() => import('./Pages/Dash'));
 
@@ -69,6 +70,10 @@ const routing = createBrowserRouter([
         path: '/profile',
         element: <Profile />
       },
+      {
+        path: '/orderhistory',
+        element: <Orderhistory />
+      }
 
 
 

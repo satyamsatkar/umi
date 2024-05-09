@@ -12,6 +12,8 @@ const InnerHeader = () => {
         return 'My Cart';
       case '/orderconfirm':
         return '';
+      case '/orderhistory':
+        return 'Order History'
       default:
         return 'UMI';
     }

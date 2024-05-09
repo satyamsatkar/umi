@@ -17,6 +17,7 @@ const Dash = () => {
   const [toggle2, settoggle2] = useState(false);
   const [Vendor, setVendor] = useState([]);
   const [VendorProducts, setVendorProducts] = useState([]);
+  const [locid , setLocId] = useState('')
   const handleclick = (e) => {
     settoggle(true)
     settoggle2(false);
@@ -32,25 +33,20 @@ const Dash = () => {
 
   const [location, setLocation] = useState([]);
 
-  const getLocation = async () => {
+
+  async function getLocation() {
     const data = {
-      user_id  : localStorage.getItem("food_id")
+      loc_id  : localStorage.getItem('locid')
     }
 
-    const response = await axios.post(`${BASE_URL}/getLocation`, data);
-
-
-    setLocation(response.data);
+    axios.post(`${BASE_URL}/get_loc`,data)
+    .then((res)=>{
+      setLocation(res.data)
+      setLocId(res.data[0].id)
+    })
   }
 
 
-
-  const getVendorList = async()=>{
-    const response = await axios.get(`${BASE_URL}/vendorList`);
-
-    console.log(response.data);
-    setVendor(response.data);
-  }
 
   const Navigate = useNavigate()
 
@@ -60,20 +56,32 @@ const Dash = () => {
       vendorId : id
     })
 
-    console.log(response.data);
+    // console.log(response.data);
     setVendorProducts(response.data);
 
     Navigate(`/vendorpage/${id}`)
   }
   useEffect(() => {
-    // getLocation();
-    getVendorList();
+    getLocation();
   }, [])
 
 
-  const handleredirect = () =>{
-alert("EE")
+  const handlegetvendor = async (id) =>{
+    const data = {
+      loc_id : id || locid
+    }
+    const response = await axios.post(`${BASE_URL}/vendorList`,data);
+
+    setVendor(response.data);
   }
+
+  useEffect(()=>{
+    setTimeout(()=>{
+      handlegetvendor()
+
+    },500)
+  },[locid])
+
   return (
     <div>
       <Banner />
@@ -82,12 +90,11 @@ alert("EE")
 
           <div className='col-md-7 col-7 position-relative'>
             {/* <input className="border-yellow p-1" type='text' placeholder="ANDHERI-POWAI-CAFE-1" alt='' disabled /> */}
-            <select className="border-yellow p-1 w-100" onChange={(e) =>{
-               getVendorSpecificProducts(e.target.value)}}>
+            <select onChange={(e) =>handlegetvendor(e.target.value)} className="border-yellow p-1 w-100" >
               {
-                Vendor?.map((item)=>{
+                location?.map((item)=>{
                   return(
-                    <option onClick={handleredirect} key={item.id} value={item.id}> <Link to={`/menupage/${item.id}`}> {item.company_name}</Link></option>
+                    <option  key={item.id} value={item.id}>{item.location}</option>
                   )
                 })
               }
@@ -98,6 +105,7 @@ alert("EE")
           <div className='col-md-5 col-5 '>
          <select className="border-yellow w-100 px-1 py-1 mx-1" onChange={(e) =>{
                getVendorSpecificProducts(e.target.value)}}>
+
               <option>SELECT VENDOR</option>
               {/* <option>1</option>
               <option>2</option>
@@ -105,7 +113,7 @@ alert("EE")
               {
                 Vendor?.map((item)=>{
                   return(
-                    <option onClick={handleredirect} key={item.id} value={item.id}> <Link to={`/menupage/${item.id}`}> {item.company_name}</Link></option>
+                    <option key={item.id} value={item.id}> <Link to={`/menupage/${item.id}`}> {item.company_name}</Link></option>
                   )
                 })
               }
